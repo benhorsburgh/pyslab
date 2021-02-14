@@ -1,5 +1,18 @@
 import numpy as np
+from pyslab.generator import generate
 from pyslab.generator import permute_row_blocks, permute_col_blocks, permute_rows, permute_cols
+from pyslab.validator import is_solved
+
+
+class TestGenerator:
+
+    def test_valid(self):
+        board = generate()
+        assert is_solved(board)
+
+    def test_permutations(self, simple_board):
+        board = generate(simple_board)
+        assert not np.array_equal(board, simple_board)
 
 
 class TestPermuteRowBlocks:

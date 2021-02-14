@@ -2,7 +2,7 @@ import numpy as np
 from typing import Iterator, Tuple, Set
 
 
-def unsolved(board: np.ndarray) -> Iterator[Tuple[int, int]]:
+def unsolved_elems(board: np.ndarray) -> Iterator[Tuple[int, int]]:
     return zip(*np.where(board == 0))
 
 

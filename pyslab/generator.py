@@ -3,8 +3,20 @@ import random
 from pyslab.solver import brute_force
 
 
-def generate(seed: np.ndarray = np.zeros([9, 9])):
-    solution = brute_force(seed)
+def generate(
+        seed: np.ndarray = np.zeros([9, 9]),
+        num_permutations: int = 1000
+):
+    board = brute_force(seed)
+    for _ in range(num_permutations):
+        permute_function = random.choice([
+            permute_rows,
+            permute_cols,
+            permute_row_blocks,
+            permute_col_blocks
+        ])
+        board = permute_function(board)
+    return board
 
 
 def permute_row_blocks(board: np.ndarray) -> np.ndarray:

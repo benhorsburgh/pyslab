@@ -2,7 +2,7 @@ from typing import List
 import numpy as np
 
 
-def solved(solution: np.ndarray) -> bool:
+def is_solved(solution: np.ndarray) -> bool:
 
     numbers = set(range(1, 10))
 
