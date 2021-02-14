@@ -31,7 +31,7 @@ extras_require = {}
 setup(
     name=name,
     version=version,
-    license="Apache Software License (Apache 2.0)",
+    license="AMIT",
     description="Play Your Sudoku Like A Boss",
     long_description=readme,
     long_description_content_type="text/markdown",
