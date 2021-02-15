@@ -1,13 +1,14 @@
 import numpy as np
 import random
-from pyslab.solver import brute_force
+from pyslab.board import brute_force_solution, unsolved_elems, has_unique_solution
 
 
 def generate(
         seed: np.ndarray = np.zeros([9, 9]),
-        num_permutations: int = 1000
+        num_permutations: int = 1000,
+        num_clues: int = 20
 ):
-    board = brute_force(seed)
+    board = brute_force_solution(seed)
     for _ in range(num_permutations):
         permute_function = random.choice([
             permute_rows,
@@ -16,6 +17,21 @@ def generate(
             permute_col_blocks
         ])
         board = permute_function(board)
+
+    mask = np.array([
+        [1,0,0,0,1,0,0,0,1],
+        [0,1,0,0,0,1,0,1,0],
+        [0,0,1,1,0,0,1,0,0],
+        [0,1,0,0,1,0,1,0,0],
+        [1,0,0,1,0,1,0,0,1],
+        [0,0,1,0,1,0,0,1,0],
+        [0,0,1,0,0,1,1,0,0],
+        [0,1,0,1,0,0,0,1,0],
+        [1,0,0,0,1,0,0,0,1]
+    ])
+
+    board[np.where(mask==0)] = 0
+
     return board
 
 

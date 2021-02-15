@@ -1,14 +1,16 @@
 import numpy as np
 from pyslab.generator import generate
 from pyslab.generator import permute_row_blocks, permute_col_blocks, permute_rows, permute_cols
-from pyslab.validator import is_solved
+from pyslab.board import is_solved, has_unique_solution
 
 
 class TestGenerator:
 
     def test_valid(self):
         board = generate()
-        assert is_solved(board)
+        print()
+        print(board)
+        assert has_unique_solution(board)
 
     def test_permutations(self, simple_board):
         board = generate(simple_board)
