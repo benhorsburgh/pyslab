@@ -1,12 +1,11 @@
 import numpy as np
 import random
-from pyslab.board import brute_force_solution, unsolved_elems, has_unique_solution
+from pyslab.board import brute_force_solution, unsolved_elems, has_unique_solution, solved_elems
 
 
-def generate(
+def generate_solution(
         seed: np.ndarray = np.zeros([9, 9]),
-        num_permutations: int = 1000,
-        num_clues: int = 20
+        num_permutations: int = 1000
 ):
     board = brute_force_solution(seed)
     for _ in range(num_permutations):
@@ -18,25 +17,32 @@ def generate(
         ])
         board = permute_function(board)
 
-    mask = np.array([
-        [1,0,0,0,1,0,0,0,1],
-        [0,1,0,0,0,1,0,1,0],
-        [0,0,1,1,0,0,1,0,0],
-        [0,1,0,0,1,0,1,0,0],
-        [1,0,0,1,0,1,0,0,1],
-        [0,0,1,0,1,0,0,1,0],
-        [0,0,1,0,0,1,1,0,0],
-        [0,1,0,1,0,0,0,1,0],
-        [1,0,0,0,1,0,0,0,1]
-    ])
-
-    board[np.where(mask==0)] = 0
-
     return board
 
 
+def generate_problem(
+        board: np.ndarray
+):
+    if has_unique_solution(board):
+
+        candidates = list(solved_elems(board))
+
+        if len(candidates) < 30:
+            yield board
+        else:
+            random.shuffle(candidates)
+
+            for r, c in candidates:
+                updated_board = board.copy()
+                updated_board[r, c] = 0
+                updated_board[8-r, 8-c] = 0
+                yield from generate_problem(updated_board)
+
+
 def permute_row_blocks(board: np.ndarray) -> np.ndarray:
-    a, b, c = random.sample([0, 1, 2], k=3)
+    a, b, c = 0, 1, 2
+    while (a, b, c) == (0, 1, 2):
+        a, b, c = random.sample([0, 1, 2], k=3)
     return np.concatenate([
         board[a * 3:a * 3 + 3, :],
         board[b * 3:b * 3 + 3, :],
@@ -44,7 +50,9 @@ def permute_row_blocks(board: np.ndarray) -> np.ndarray:
 
 
 def permute_col_blocks(board: np.ndarray) -> np.ndarray:
-    a, b, c = random.sample([0, 1, 2], k=3)
+    a, b, c = 0, 1, 2
+    while (a, b, c) == (0, 1, 2):
+        a, b, c = random.sample([0, 1, 2], k=3)
     return np.concatenate(
         [board[:, a * 3:a * 3 + 3],
          board[:, b * 3:b * 3 + 3],
@@ -55,6 +63,8 @@ def permute_rows(board: np.ndarray) -> np.ndarray:
     board = board.copy()
     block = random.randint(0, 2)
     a, b = random.sample([0, 1, 2], k=2)
+    while (a, b) in [(0, 1), (1, 2)]:
+        a, b = random.sample([0, 1, 2], k=2)
     board[[block*3+a, block*3+b]] = board[[block*3+b, block*3+a]]
     return board
 
@@ -63,5 +73,7 @@ def permute_cols(board: np.ndarray) -> np.ndarray:
     board = board.copy()
     block = random.randint(0, 2)
     a, b = random.sample([0, 1, 2], k=2)
+    while (a, b) in [(0, 1), (1, 2)]:
+        a, b = random.sample([0, 1, 2], k=2)
     board[:, [block * 3 + a, block * 3 + b]] = board[:, [block * 3 + b, block * 3 + a]]
     return board

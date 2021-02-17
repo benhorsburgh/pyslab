@@ -1,9 +1,13 @@
 import numpy as np
-from typing import Iterator, Tuple, Set, Generator, Any
+from typing import Iterator, Tuple, Set, Generator, Any, Dict, List
 
 
 def unsolved_elems(board: np.ndarray) -> Iterator[Tuple[int, int]]:
     return zip(*np.where(board == 0))
+
+
+def solved_elems(board: np.ndarray) -> Iterator[Tuple[int, int]]:
+    return zip(*np.where(board > 0))
 
 
 def row_values(board: np.ndarray, row: int) -> Set:
@@ -46,7 +50,9 @@ def is_solved(board: np.ndarray) -> bool:
     return True
 
 
-def brute_force_solutions(board: np.ndarray) -> Generator[np.ndarray, Any, None]:
+def brute_force_solutions(
+        board: np.ndarray
+) -> Generator[np.ndarray, Any, None]:
     try:
         next_to_solve = next(unsolved_elems(board))
         possible_values = set(range(1, 10)) - peer_values(board, *next_to_solve)

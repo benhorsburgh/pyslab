@@ -45,13 +45,6 @@ class TestIsSolved:
 
 class TestBruteForceSolution:
 
-    def test_timing(self):
-
-        for _ in range(100):
-            board = np.zeros([9, 9])
-            solution = brute_force_solution(board)
-        assert is_solved(solution)
-
     def test_from_empty(self):
 
         board = np.zeros([9, 9])
