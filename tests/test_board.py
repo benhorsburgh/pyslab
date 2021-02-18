@@ -1,6 +1,9 @@
 import pytest
 import numpy as np
-from pyslab.board import unsolved_elems, is_solved, brute_force_solution, brute_force_solutions, has_unique_solution
+from pyslab.board import (
+    unsolved_elems, is_solved, brute_force_solution, brute_force_solutions, has_unique_solution,
+    brute_force_solution2, unsolved_elems2
+)
 
 
 class TestUnsolvedElems:
@@ -91,3 +94,29 @@ class TestHasUniqueSolution:
         simple_board[np.where(simple_board == 1)] = 0
         simple_board[np.where(simple_board == 2)] = 0
         assert not has_unique_solution(simple_board)
+
+class TestSomething:
+
+    @pytest.fixture
+    def simple_board2(self):
+        return np.array([
+            [{1,21}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}],
+            [{4}, {5}, {6}, {7}, {8}, {9}, {1}, {2}, {3}],
+            [{7}, {33}, {9}, {1}, {2}, {3}, {4}, {5}, {6}],
+            [{2}, {1}, {4}, {3}, {6}, {5}, {8}, {9}, {7}],
+            [{3}, {6}, {5}, {8}, {9}, {7}, {2}, {1}, {4}],
+            [{8}, {9}, {7}, {2}, {1}, {4}, {3}, {6}, {5}],
+            [{5}, {3}, {1}, {6}, {4}, {2}, {9}, {7}, {8}],
+            [{6}, {4}, {2}, {9}, {7}, {8}, {5}, {3}, {1}],
+            [{99}, {7}, {8}, {5}, {3}, {1}, {6}, {4}, {2}]
+        ])
+
+    def test_a(self, simple_board2):
+
+        print()
+
+        board = np.array([set(range(1,10)) for _ in range(81)]).reshape([9, 9])
+        print(unsolved_elems2(board))
+        # print(board)
+        print()
+        print(brute_force_solution2(board))
