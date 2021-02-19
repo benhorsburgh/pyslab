@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 
 @pytest.fixture
-def simple_board():
+def simple_puzzle():
     return np.array([
         [1,2,3,4,5,6,7,8,9],
         [4,5,6,7,8,9,1,2,3],
