@@ -13,15 +13,19 @@ def solved_elems(puzzle: np.ndarray) -> Iterator[Tuple[int, int]]:
 def row_values(puzzle: np.ndarray, row: int) -> Set:
     return set(puzzle[row, :]) - {0}
 
+
 def col_values(puzzle: np.ndarray, col: int) -> Set:
     return set(puzzle[:, col]) - {0}
+
 
 def nonet_values(puzzle: np.ndarray, row: int, col: int) -> Set:
     r, c = row//3*3, col//3*3
     return set(puzzle[r:r+3,c:c+3].flatten()) - {0}
 
+
 def peer_values(puzzle: np.ndarray, row: int, col: int) -> Set:
     return row_values(puzzle, row).union(col_values(puzzle, col)).union(nonet_values(puzzle, row, col))
+
 
 def is_solved(puzzle: np.ndarray) -> bool:
 
@@ -46,7 +50,6 @@ def is_solved(puzzle: np.ndarray) -> bool:
     return True
 
 
-
 def brute_force_solutions(
         puzzle: np.ndarray
 ) -> Generator[np.ndarray, Any, None]:
@@ -59,8 +62,8 @@ def brute_force_solutions(
             possible_puzzle[next_to_solve] = v
             yield from brute_force_solutions(possible_puzzle)
     except StopIteration:
-        yield puzzle
-
+        if is_solved(puzzle):
+            yield puzzle
 
 
 def brute_force_solution(puzzle: np.ndarray):
@@ -82,3 +85,10 @@ def has_unique_solution(puzzle: np.ndarray) -> bool:
         return False
     except StopIteration:
         return True
+
+
+def create_candidate_grid(puzzle: np.ndarray) -> np.ndarray:
+    return np.array([[
+        set(range(1, 10)) - peer_values(puzzle, r, c) if puzzle[r, c] == 0 else {puzzle[r, c]}
+        for c in range(9)]
+        for r in range(9)])
