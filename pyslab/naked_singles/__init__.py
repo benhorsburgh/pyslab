@@ -1,0 +1,1 @@
+from .naked_singles import find_in_rows
