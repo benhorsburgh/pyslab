@@ -1,15 +1,16 @@
 import numpy as np
 from pyslab.solver import solve, set_cell
-from pyslab.grid import create_candidate_grid
+from pyslab.grid import create_candidate_grid, is_solved
 
 
-def test_hidden_single(str_to_grid_candidates):
+class TestBoards:
+    def test_only_singles(self, str_to_grid_candidates):
 
-    grid, _ = str_to_grid_candidates(
-        "080107040700469001400803007135974600270618530608532100900046005000781000860095010"
-    )
-    solve(grid)
-    # todo: complete
+        grid, _ = str_to_grid_candidates(
+            "080107040700469001400803007135974600270618530608532100900046005000781000860095010"
+        )
+        grid = solve(grid)
+        assert is_solved(grid)
 
 
 class TestSetCell:
