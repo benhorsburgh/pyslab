@@ -1,42 +1,51 @@
 """Sudoku Solver"""
 from typing import Tuple
 import numpy as np
-import naked_singles
-from puzzle_grid import create_candidate_grid, peer_elements
+from pyslab.strategies import hidden_singles
+from .grid import (
+    create_candidate_grid,
+    peer_cells,
+    row_houses,
+    column_houses,
+    box_houses,
+)
 
 
-def solve(puzzle: np.ndarray):
+def solve(grid: np.ndarray):
 
-    candidates = create_candidate_grid(puzzle)
+    candidates = create_candidate_grid(grid)
 
     progress = True
 
     while progress:
         progress = False
 
-        for elem, number in naked_singles.find_in_rows(puzzle, candidates):
-            progress = True
-            print("Naked single in row", elem, number)
-            set_element(puzzle, candidates, elem, number)
+        for row, house in enumerate(row_houses()):
+            for cell, digit in hidden_singles.find_placements(grid, candidates, house):
+                progress = True
+                print(f"Hidden single in row {row}", cell, digit)
+                set_cell(grid, candidates, cell, digit)
 
-        for elem, number in naked_singles.find_in_columns(puzzle, candidates):
-            progress = True
-            print("Naked single in column", elem, number)
-            set_element(puzzle, candidates, elem, number)
+        for column, house in enumerate(column_houses()):
+            for cell, digit in hidden_singles.find_placements(grid, candidates, house):
+                progress = True
+                print(f"Hidden single in column {column}", cell, digit)
+                set_cell(grid, candidates, cell, digit)
 
-        for elem, number in naked_singles.find_in_nonets(puzzle, candidates):
-            progress = True
-            print("Naked single in nonet", elem, number)
-            set_element(puzzle, candidates, elem, number)
+        for box, house in enumerate(box_houses()):
+            for cell, digit in hidden_singles.find_placements(grid, candidates, house):
+                progress = True
+                print(f"Hidden single in box {box}", cell, digit)
+                set_cell(grid, candidates, cell, digit)
 
 
-def set_element(
-    puzzle: np.ndarray, candidates: np.ndarray, element: Tuple[int, int], number: int
+def set_cell(
+    grid: np.ndarray, candidates: np.ndarray, cell: Tuple[int, int], digit: int
 ):
-    puzzle[element] = number
-    candidates[element] = {number}
+    grid[cell] = digit
+    candidates[cell] = {digit}
 
     # propagate changes through candidates
-    for elem in peer_elements(*element):
-        if number in candidates[elem]:
-            candidates[elem].remove(number)
+    for peer_cell in peer_cells(*cell):
+        if digit in candidates[peer_cell]:
+            candidates[peer_cell].remove(digit)

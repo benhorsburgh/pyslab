@@ -1,126 +1,106 @@
-import pytest
 import numpy as np
-from pyslab import naked_singles
-from pyslab.generator import generate_solution, generate_problem, generate_example
+from pyslab.generator import generate_solution, generate_problem
 from pyslab.generator import (
     permute_row_blocks,
     permute_col_blocks,
     permute_rows,
     permute_cols,
 )
-from pyslab.puzzle_grid import is_solved, has_unique_solution, create_candidate_grid
-
-
-# class TestGenerateExample:
-#     @pytest.mark.parametrize(
-#         "finder",
-#         [
-#             # naked_singles.find_in_rows,
-#             # naked_singles.find_in_columns,
-#             naked_singles.find_in_nonets,
-#         ],
-#     )
-#     def test_generate_naked_single_row(self, finder):
-#         puzzle = generate_example(finder)
-#         print()
-#         print(puzzle)
-#         assert len(finder(puzzle, create_candidate_grid(puzzle))) > 0
-#         print("".join([str(int(puzzle[r, c])) for r in range(9) for c in range(9)]))
-#         print(finder(puzzle, create_candidate_grid(puzzle)))
+from pyslab.grid import has_unique_solution
 
 
 class TestGeneraSolution:
     def test_valid(self):
-        puzzle = generate_solution()
-        assert has_unique_solution(puzzle)
+        grid = generate_solution()
+        assert has_unique_solution(grid)
 
-    def test_permutations(self, simple_puzzle):
-        puzzle = generate_solution(simple_puzzle)
-        assert not np.array_equal(puzzle, simple_puzzle)
+    def test_permutations(self, simple_grid):
+        grid = generate_solution(simple_grid)
+        assert not np.array_equal(grid, simple_grid)
 
 
 class TestGenerateProblem:
     def test_valid(self):
-        puzzle = generate_solution()
-        problem = next(generate_problem(puzzle))
+        grid = generate_solution()
+        problem = next(generate_problem(grid))
         assert has_unique_solution(problem)
 
 
 class TestPermuteRowBlocks:
-    def test_puzzle_changed(self, simple_puzzle):
-        permuted_puzzle = permute_row_blocks(simple_puzzle)
-        assert not np.array_equal(permuted_puzzle, simple_puzzle)
+    def test_grid_changed(self, simple_grid):
+        permuted_grid = permute_row_blocks(simple_grid)
+        assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_rows_present(self, simple_puzzle):
-        permuted_puzzle = permute_row_blocks(simple_puzzle)
-        for row in simple_puzzle:
-            assert row in permuted_puzzle
+    def test_all_rows_present(self, simple_grid):
+        permuted_grid = permute_row_blocks(simple_grid)
+        for row in simple_grid:
+            assert row in permuted_grid
 
-    def test_all_row_blocks_present(self, simple_puzzle):
-        permuted_puzzle = permute_row_blocks(simple_puzzle).reshape([3, 27])
-        simple_puzzle = simple_puzzle.reshape([3, 27])
+    def test_all_row_blocks_present(self, simple_grid):
+        permuted_grid = permute_row_blocks(simple_grid).reshape([3, 27])
+        simple_grid = simple_grid.reshape([3, 27])
 
         assert all(
-            (simple_puzzle[r, :] == permuted_puzzle).all(axis=1).any() for r in range(3)
+            (simple_grid[r, :] == permuted_grid).all(axis=1).any() for r in range(3)
         )
 
 
 class TestPermuteColBlocks:
-    def test_puzzle_changed(self, simple_puzzle):
-        permuted_puzzle = permute_col_blocks(simple_puzzle)
-        assert not np.array_equal(permuted_puzzle, simple_puzzle)
+    def test_grid_changed(self, simple_grid):
+        permuted_grid = permute_col_blocks(simple_grid)
+        assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_cols_present(self, simple_puzzle):
-        permuted_puzzle = permute_col_blocks(simple_puzzle).T
-        for col in simple_puzzle.T:
-            assert col in permuted_puzzle
+    def test_all_cols_present(self, simple_grid):
+        permuted_grid = permute_col_blocks(simple_grid).T
+        for col in simple_grid.T:
+            assert col in permuted_grid
 
-    def test_all_col_blocks_present(self, simple_puzzle):
-        permuted_puzzle = permute_col_blocks(simple_puzzle).T.reshape([3, 27])
-        simple_puzzle = simple_puzzle.T.reshape([3, 27])
+    def test_all_col_blocks_present(self, simple_grid):
+        permuted_grid = permute_col_blocks(simple_grid).T.reshape([3, 27])
+        simple_grid = simple_grid.T.reshape([3, 27])
 
         assert all(
-            (simple_puzzle[c, :] == permuted_puzzle).all(axis=1).any() for c in range(3)
+            (simple_grid[c, :] == permuted_grid).all(axis=1).any() for c in range(3)
         )
 
 
 class TestPermuteRows:
-    def test_puzzle_changed(self, simple_puzzle):
-        permuted_puzzle = permute_rows(simple_puzzle)
-        assert not np.array_equal(permuted_puzzle, simple_puzzle)
+    def test_grid_changed(self, simple_grid):
+        permuted_grid = permute_rows(simple_grid)
+        assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_rows_present(self, simple_puzzle):
-        permuted_puzzle = permute_rows(simple_puzzle)
-        for row in simple_puzzle:
-            assert row in permuted_puzzle
+    def test_all_rows_present(self, simple_grid):
+        permuted_grid = permute_rows(simple_grid)
+        for row in simple_grid:
+            assert row in permuted_grid
 
-    def test_only_two_rows_swapped(self, simple_puzzle):
-        permuted_puzzle = permute_rows(simple_puzzle)
+    def test_only_two_rows_swapped(self, simple_grid):
+        permuted_grid = permute_rows(simple_grid)
         assert (
             sum(
-                np.array_equal(simple_puzzle[row], permuted_puzzle[row])
-                for row in range(len(simple_puzzle))
+                np.array_equal(simple_grid[row], permuted_grid[row])
+                for row in range(len(simple_grid))
             )
             == 7
         )
 
 
 class TestPermuteCols:
-    def test_puzzle_changed(self, simple_puzzle):
-        permuted_puzzle = permute_cols(simple_puzzle)
-        assert not np.array_equal(permuted_puzzle, simple_puzzle)
+    def test_grid_changed(self, simple_grid):
+        permuted_grid = permute_cols(simple_grid)
+        assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_cols_present(self, simple_puzzle):
-        permuted_puzzle = permute_rows(simple_puzzle).T
-        for col in simple_puzzle.T:
-            assert col in permuted_puzzle
+    def test_all_cols_present(self, simple_grid):
+        permuted_grid = permute_rows(simple_grid).T
+        for col in simple_grid.T:
+            assert col in permuted_grid
 
-    def test_only_two_cols_swapped(self, simple_puzzle):
-        permuted_puzzle = permute_cols(simple_puzzle).T
+    def test_only_two_cols_swapped(self, simple_grid):
+        permuted_grid = permute_cols(simple_grid).T
         assert (
             sum(
-                np.array_equal(simple_puzzle.T[col], permuted_puzzle[col])
-                for col in range(len(simple_puzzle))
+                np.array_equal(simple_grid.T[col], permuted_grid[col])
+                for col in range(len(simple_grid))
             )
             == 7
         )
