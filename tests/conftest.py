@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from typing import Tuple, Callable
-from pyslab.grid import create_candidate_grid
+from solver import create_candidate_grid
 
 
 @pytest.fixture

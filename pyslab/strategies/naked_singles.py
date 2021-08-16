@@ -1,6 +1,6 @@
 """Find naked singles"""
 import numpy as np
-from pyslab.grid import house_cells
+from core.cells import house_cells
 
 
 def find_placements(

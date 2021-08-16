@@ -6,7 +6,7 @@ from pyslab.generator import (
     permute_rows,
     permute_cols,
 )
-from pyslab.grid import has_unique_solution
+from core.validation import has_unique_solution
 
 
 class TestGeneraSolution:

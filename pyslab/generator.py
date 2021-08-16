@@ -2,12 +2,8 @@ import random
 from functools import partial
 from typing import Callable, List, Tuple
 import numpy as np
-from pyslab.grid import (
-    brute_force_solution,
-    has_unique_solution,
-    solved_cells,
-    create_candidate_grid,
-)
+from solver import create_candidate_grid
+from core.validation import brute_force_solution, has_unique_solution, solved_cells
 
 
 def generate_example(

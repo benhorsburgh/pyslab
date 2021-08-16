@@ -1,10 +1,12 @@
 """Find hidden singles"""
+from typing import List, Tuple
 from collections import Counter
 import numpy as np
-from pyslab.grid import house_cells
+from core.types import Cell
+from core.cells import house_cells
 
 
-def _count_candidates_in_house(
+def _count_singles_in_house(
     grid: np.ndarray, candidates: np.ndarray, house: int
 ) -> Counter:
     return Counter(
@@ -19,10 +21,10 @@ def find_placements(
     grid: np.ndarray,
     candidates: np.ndarray,
     house: int,
-):
+) -> List[Tuple[Cell, int]]:
     singles = [
         digit
-        for digit, cnt in _count_candidates_in_house(grid, candidates, house).items()
+        for digit, cnt in _count_singles_in_house(grid, candidates, house).items()
         if cnt == 1
     ]
 
