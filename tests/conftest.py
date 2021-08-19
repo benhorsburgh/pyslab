@@ -1,11 +1,13 @@
-import pytest
+from typing import Tuple
+
 import numpy as np
-from typing import Tuple, Callable
-from solver import create_candidate_grid
+import pytest
+
+from pyslab.solver import create_candidate_grid
 
 
-@pytest.fixture
-def simple_grid():
+@pytest.fixture(name="simple_grid")
+def fixture_simple_grid():
     return np.array(
         [
             [1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -26,10 +28,6 @@ def simple_candidates(simple_grid):
     return create_candidate_grid(simple_grid)
 
 
-@pytest.fixture
-def str_to_grid_candidates() -> Callable[[str], Tuple[np.ndarray, np.ndarray]]:
-    def _f(sudoku: str) -> Tuple[np.ndarray, np.ndarray]:
-        grid = np.array([int(e) for e in sudoku]).reshape([9, 9])
-        return grid, create_candidate_grid(grid)
-
-    return _f
+def str_to_grid_candidates(sudoku: str) -> Tuple[np.ndarray, np.ndarray]:
+    grid = np.array([int(e) for e in sudoku]).reshape([9, 9])
+    return grid, create_candidate_grid(grid)

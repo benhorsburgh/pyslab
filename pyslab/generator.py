@@ -1,9 +1,12 @@
 import random
 from functools import partial
 from typing import Callable, List, Tuple
+
 import numpy as np
-from solver import create_candidate_grid
-from core.validation import brute_force_solution, has_unique_solution, solved_cells
+
+from .core.types import Cell
+from .core.validation import brute_force_solution, has_unique_solution, solved_cells
+from .solver import create_candidate_grid
 
 
 def generate_example(
@@ -15,14 +18,14 @@ def generate_example(
     permutations: int = 1000,
     max_clues: int = 50,
 ) -> np.ndarray:
+    print("Scanning with max_clues =", max_clues)
     solved_grid = generate_solution(seed, permutations)
 
     i = 0
     for grid in generate_problem(solved_grid, max_clues=max_clues):
         i += 1
-
         if all(
-            len(finder(grid, create_candidate_grid(grid))) == min_match
+            len(finder(grid, create_candidate_grid(grid))) >= min_match
             for finder in finders
         ):
             print("max clues", max_clues)
@@ -60,6 +63,9 @@ def generate_problem(grid: np.ndarray, max_clues: int = 30):
                 updated_grid = grid.copy()
                 updated_grid[r, c] = 0
                 updated_grid[8 - r, 8 - c] = 0
+                candidates.remove(Cell(r, c))
+                if Cell(8 - r, 8 - c) in candidates:
+                    candidates.remove(Cell(8 - r, 8 - c))
                 yield from generate_problem(updated_grid)
 
 
@@ -121,11 +127,12 @@ def main(finders, min_match):
 
 
 if __name__ == "__main__":
-    from pyslab.solver import hidden_singles
+    from pyslab.strategies import naked_pair
+    from pyslab.core.cells import box_cells
 
     main(
         [
-            partial(hidden_singles.find_placements, house=25),
+            partial(naked_pair.find_eliminations, cells=box_cells(8)),
         ],
         1,
     )

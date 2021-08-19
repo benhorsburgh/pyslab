@@ -2,8 +2,8 @@ from typing import Generator, Any, Iterator
 
 import numpy as np
 
-from core.digits import peer_digits
-from core.types import Cell
+from ..core.digits import peer_digits
+from ..core.types import Cell
 
 
 def is_solved(grid: np.ndarray) -> bool:

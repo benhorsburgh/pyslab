@@ -1,9 +1,10 @@
 from typing import Set
-from .types import Cell
-from .cells import row_cells, column_cells, box_cells
-from .peers import all_peer_cells
 
 import numpy as np
+
+from .cells import row_cells, column_cells, box_cells
+from .peers import all_peer_cells
+from .types import Cell
 
 
 def row_digits(grid: np.ndarray, row: int) -> Set[int]:

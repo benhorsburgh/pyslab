@@ -1,4 +1,5 @@
 from typing import List
+
 from .types import Cell
 
 
@@ -17,11 +18,3 @@ def box_cells(box: int) -> List[Cell]:
         for r in range(corner_r, corner_r + 3)
         for c in range(corner_c, corner_c + 3)
     ]
-
-
-def house_cells(house: int) -> List[Cell]:
-    if house // 9 == 0:
-        return row_cells(house)
-    if house // 9 == 1:
-        return column_cells(house - 9)
-    return box_cells(house - 18)

@@ -1,4 +1,6 @@
 import numpy as np
+
+from pyslab.core.validation import has_unique_solution
 from pyslab.generator import generate_solution, generate_problem
 from pyslab.generator import (
     permute_row_blocks,
@@ -6,37 +8,50 @@ from pyslab.generator import (
     permute_rows,
     permute_cols,
 )
-from core.validation import has_unique_solution
 
 
 class TestGeneraSolution:
-    def test_valid(self):
+    @staticmethod
+    def test_valid():
         grid = generate_solution()
         assert has_unique_solution(grid)
 
-    def test_permutations(self, simple_grid):
+    @staticmethod
+    def test_permutations(simple_grid):
         grid = generate_solution(simple_grid)
         assert not np.array_equal(grid, simple_grid)
 
 
 class TestGenerateProblem:
-    def test_valid(self):
+    @staticmethod
+    def test_valid():
         grid = generate_solution()
-        problem = next(generate_problem(grid))
+        problem = next(generate_problem(grid, max_clues=60))
         assert has_unique_solution(problem)
+
+    @staticmethod
+    def test_multiple_valid():
+        grid = generate_solution()
+        problems = generate_problem(grid, max_clues=55)
+        problem1 = next(problems)
+        problem2 = next(problems)
+        assert not np.array_equal(problem1, problem2)
 
 
 class TestPermuteRowBlocks:
-    def test_grid_changed(self, simple_grid):
+    @staticmethod
+    def test_grid_changed(simple_grid):
         permuted_grid = permute_row_blocks(simple_grid)
         assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_rows_present(self, simple_grid):
+    @staticmethod
+    def test_all_rows_present(simple_grid):
         permuted_grid = permute_row_blocks(simple_grid)
         for row in simple_grid:
             assert row in permuted_grid
 
-    def test_all_row_blocks_present(self, simple_grid):
+    @staticmethod
+    def test_all_row_blocks_present(simple_grid):
         permuted_grid = permute_row_blocks(simple_grid).reshape([3, 27])
         simple_grid = simple_grid.reshape([3, 27])
 
@@ -46,16 +61,19 @@ class TestPermuteRowBlocks:
 
 
 class TestPermuteColBlocks:
-    def test_grid_changed(self, simple_grid):
+    @staticmethod
+    def test_grid_changed(simple_grid):
         permuted_grid = permute_col_blocks(simple_grid)
         assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_cols_present(self, simple_grid):
+    @staticmethod
+    def test_all_cols_present(simple_grid):
         permuted_grid = permute_col_blocks(simple_grid).T
         for col in simple_grid.T:
             assert col in permuted_grid
 
-    def test_all_col_blocks_present(self, simple_grid):
+    @staticmethod
+    def test_all_col_blocks_present(simple_grid):
         permuted_grid = permute_col_blocks(simple_grid).T.reshape([3, 27])
         simple_grid = simple_grid.T.reshape([3, 27])
 
@@ -65,16 +83,19 @@ class TestPermuteColBlocks:
 
 
 class TestPermuteRows:
-    def test_grid_changed(self, simple_grid):
+    @staticmethod
+    def test_grid_changed(simple_grid):
         permuted_grid = permute_rows(simple_grid)
         assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_rows_present(self, simple_grid):
+    @staticmethod
+    def test_all_rows_present(simple_grid):
         permuted_grid = permute_rows(simple_grid)
         for row in simple_grid:
             assert row in permuted_grid
 
-    def test_only_two_rows_swapped(self, simple_grid):
+    @staticmethod
+    def test_only_two_rows_swapped(simple_grid):
         permuted_grid = permute_rows(simple_grid)
         assert (
             sum(
@@ -86,16 +107,19 @@ class TestPermuteRows:
 
 
 class TestPermuteCols:
-    def test_grid_changed(self, simple_grid):
+    @staticmethod
+    def test_grid_changed(simple_grid):
         permuted_grid = permute_cols(simple_grid)
         assert not np.array_equal(permuted_grid, simple_grid)
 
-    def test_all_cols_present(self, simple_grid):
+    @staticmethod
+    def test_all_cols_present(simple_grid):
         permuted_grid = permute_rows(simple_grid).T
         for col in simple_grid.T:
             assert col in permuted_grid
 
-    def test_only_two_cols_swapped(self, simple_grid):
+    @staticmethod
+    def test_only_two_cols_swapped(simple_grid):
         permuted_grid = permute_cols(simple_grid).T
         assert (
             sum(
