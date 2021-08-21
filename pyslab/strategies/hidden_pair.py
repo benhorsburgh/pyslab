@@ -1,5 +1,6 @@
-"""Find naked pairs"""
+"""Find hidden pairs"""
 from collections import Counter
+from itertools import combinations
 
 from typing import List
 import numpy as np
@@ -11,15 +12,20 @@ def find_eliminations(
     candidates: np.ndarray,
     cells: List[Cell],
 ) -> List[Elimination]:
-    naked_pair_counts = Counter(
-        frozenset(candidates[cell])
-        for cell in cells
-        if len(candidates[cell]) == 2 and grid[cell] == 0
+
+    digit_counts = Counter(
+        digit for cell in cells if grid[cell] == 0 for digit in candidates[cell]
     )
 
-    naked_pairs = [
-        sorted(list(pair)) for pair, cnt in naked_pair_counts.items() if cnt == 2
-    ]
+    pair_counts = Counter(
+        pair
+        for cell in cells
+        if grid[cell] == 0
+        for pair in combinations(candidates[cell], 2)
+        if all(digit_counts[digit] == 2 for digit in pair)
+    )
+
+    pairs = [sorted(list(pair)) for pair, cnt in pair_counts.items() if cnt == 2]
 
     return [
         elimination
@@ -28,12 +34,12 @@ def find_eliminations(
                 [
                     Candidate(cell, digit)
                     for cell in cells
-                    if grid[cell] == 0 and candidates[cell] != naked_pair
+                    if grid[cell] == 0 and all(d in candidates[cell] for d in pair)
                     for digit in candidates[cell]
-                    if digit in naked_pair
+                    if digit not in pair
                 ]
             )
-            for naked_pair in naked_pairs
+            for pair in pairs
         ]
         # no need to return naked pairs if they don't help to eliminate anything!
         if elimination.candidates

@@ -5,7 +5,7 @@ from .core.cells import row_cells, column_cells, box_cells
 from .core.digits import peer_digits
 from .core.peers import all_peer_cells
 from .core.types import Cell, Elimination, Placement
-from .strategies import hidden_single, naked_single, naked_pair
+from .strategies import hidden_single, naked_single, naked_pair, hidden_pair
 
 
 def solve(grid: np.ndarray):
@@ -41,6 +41,13 @@ def solve(grid: np.ndarray):
                     )
 
                 for elimination in naked_pair.find_eliminations(
+                    grid, candidates, cells
+                ):
+                    progress = make_elimination(
+                        candidates, elimination, f"Naked Pair in {desc}, "
+                    )
+
+                for elimination in hidden_pair.find_eliminations(
                     grid, candidates, cells
                 ):
                     progress = make_elimination(

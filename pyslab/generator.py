@@ -4,9 +4,13 @@ from typing import Callable, List, Tuple
 
 import numpy as np
 
-from .core.types import Cell
-from .core.validation import brute_force_solution, has_unique_solution, solved_cells
-from .solver import create_candidate_grid
+from pyslab.core.types import Cell
+from pyslab.core.validation import (
+    brute_force_solution,
+    has_unique_solution,
+    solved_cells,
+)
+from pyslab.solver import create_candidate_grid
 
 
 def generate_example(
@@ -127,12 +131,12 @@ def main(finders, min_match):
 
 
 if __name__ == "__main__":
-    from pyslab.strategies import naked_pair
-    from pyslab.core.cells import box_cells
+    from pyslab.strategies import hidden_pair
+    from pyslab.core.cells import row_cells, column_cells, box_cells
 
     main(
         [
-            partial(naked_pair.find_eliminations, cells=box_cells(8)),
+            partial(hidden_pair.find_eliminations, cells=box_cells(0)),
         ],
         1,
     )

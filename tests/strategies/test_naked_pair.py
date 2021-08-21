@@ -49,5 +49,9 @@ class TestFindPlacements:
 
     @staticmethod
     def test_hidden_single_ignored():
+        grid, candidates = str_to_grid_candidates(
+            "060030040001580007008009302000100083000705000910003000207900600100026500030050020"
+        )
+        eliminations = list(find_eliminations(grid, candidates, box_cells(0)))
 
-        assert False
+        assert len(eliminations) == 0
